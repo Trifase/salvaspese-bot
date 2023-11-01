@@ -240,7 +240,7 @@ async def cambia_data_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     nuova_data_str = query.data.split("_")[1]
     try:
-        nuova_data_datetime = datetime.date.strptime(nuova_data_str, "%Y-%m-%d")
+        nuova_data_datetime = datetime.datetime.strptime(nuova_data_str, "%Y-%m-%d")
         context.user_data["transazione_corrente"]["data"] = nuova_data_datetime
     except ValueError:
         reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Indietro", callback_data="back")]])

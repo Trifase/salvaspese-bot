@@ -161,7 +161,7 @@ def try_categorize(user_id, description):
             lista_desc[q.descrizione] = q.categoria
     for desc in lista_desc.keys():
         similarity = rapidfuzz.fuzz.ratio(description, desc)
-        print(f"{description} -> {desc} - {similarity}")
+        # print(f"{description} -> {desc} - {similarity}")
         if similarity > 90:
             return lista_desc[desc]
     return None
