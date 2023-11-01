@@ -164,7 +164,7 @@ def try_categorize(user_id, description):
         # print(f"{description} -> {desc} - {similarity}")
         if similarity > 90:
             return lista_desc[desc]
-    return None
+    return "Nessuna"
 
 
 def analyze_transactions(user_id=None, start_date=None, end_date=None, days=120, month=None):
@@ -496,12 +496,13 @@ def elenco_transazioni(context, user_id, month: str = None):
     t.field_names = ["DATA", "DESCRIZIONE", currency, "CATEGORIA"]
     total = 0
     for x in transactions:
+        categoria = x.categoria[:10] if x.categoria else ""
         t.add_row(
             [
                 x.date.strftime("%m-%d"),
                 x.descrizione[:15],
                 f"{round(float(x.importo)*-1, 2)} {currency}",
-                x.categoria[:10],
+                categoria,
             ]
         )
         total += float(x.importo)
