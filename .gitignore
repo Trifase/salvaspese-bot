@@ -1,5 +1,4 @@
 config.py
-main.py
 transactions.csv
 utils.py.lprof
 __pycache__/utils.cpython-311.pyc
