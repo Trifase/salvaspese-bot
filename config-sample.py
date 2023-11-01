@@ -1,0 +1,2 @@
+TOKEN = ''
+DEFAULT_CURRENCY = 'EUR'
