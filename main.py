@@ -13,6 +13,7 @@ from telegram.ext import (
     ContextTypes,
     ConversationHandler,
     MessageHandler,
+    TypeHandler,
     filters,
 )
 from telegram.warnings import PTBUserWarning
@@ -305,7 +306,8 @@ async def save_transaction(update: Update, context: ContextTypes.DEFAULT_TYPE):
     transazione_str = current_transaction(context)
     transaction = current_transaction(context, return_dict=True)
 
-    datetime_str = datetime.datetime.utcfromtimestamp(transaction["timestamp"]).strftime("%Y-%m-%d")
+    datetime_str = transaction["data"].strftime("%Y-%m-%d")
+
     user_id = int(update.effective_user.id)
     Transazione.create(
         timestamp=transaction["timestamp"],
@@ -645,6 +647,11 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.effective_chat.send_message("Cosa vuoi fare?", reply_markup=reply_markup)
     return
 
+async def end_conversation(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info("Conversation handler: end_conversation.")
+    await update.effective_chat.send_message("Senti io ho da fare, alla prossima, ci si becca!")
+    return ConversationHandler.END
+
 
 async def post_init(app: Application) -> None:
     logger.info("Conversation handler: post_init.")
@@ -723,8 +730,12 @@ def main() -> None:
                 CallbackQueryHandler(menu_reports_button, pattern="^reports_"),
                 CallbackQueryHandler(goto_menu, pattern="^back$"),
             ],
+            -2 : [
+                TypeHandler(Update, end_conversation)
+            ]
         },
         fallbacks=[CommandHandler("start", start)],
+        conversation_timeout=60
     )
 
     application.add_handler(conv_handler)
